@@ -31,7 +31,9 @@ class Search(metaclass=ABCMeta):
 
     def output(self):
         # get cells first in case path to be drawn directly
-        cells = self.board.draw_board()   
+        cells = self.board.draw_board()
+        dog_img = pygame.image.load("dog.png")
+        dog_img = pygame.transform.scale(dog_img, (18, 18))
 
         # derive shortest path starting from target node and reverse it
         node = self.target_node
@@ -42,10 +44,12 @@ class Search(metaclass=ABCMeta):
 
         # draw shortest path step by step
         color = self.board.colors["p_yellow"]                     
-        for i, j in self.board.path:
-            time.sleep(1.5*DELAY)
-            rect = cells[i][j]
-            pygame.draw.rect(self.board.screen, color, rect)
+        for i in range(len(self.board.path)-1):
+            dog_x, dog_y = self.board.path[i+1]
+            path_x, path_y = self.board.path[i]
+            time.sleep(50*DELAY)
+            self.board.screen.blit(dog_img, cells[dog_x][dog_y])
+            pygame.draw.rect(self.board.screen, color, cells[path_x][path_y])
             pygame.display.flip()
 
 class Dijkstra(Search):
